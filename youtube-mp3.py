@@ -25,7 +25,7 @@ for d in dossiers:
 
     init_len = len(data)
 
-    for i in range(0,init_len-1):
+    for i in range(0,init_len):
         url = data.loc[i][0]
         name = data.loc[i][1]+".mp3"
         
