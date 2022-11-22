@@ -1,4 +1,4 @@
-from pytube import YouTube
+from pytube import YouTube, Playlist
 from os import listdir, remove, mkdir
 from os.path import isfile, join, exists
 
@@ -12,7 +12,7 @@ class YoutubeAudioController:
         if not exists(self.path):
             mkdir(self.path)
 
-    def downloadYoutubeAudio(self, url : str, filename : str = None):
+    def downloadAudio(self, url : str, filename : str = None, folderpath : str = None):
         musicFolder = [f for f in listdir(self.path) if isfile(join(self.path, f))]
         try:
             youtubeVideo = YouTube(url)
@@ -24,6 +24,8 @@ class YoutubeAudioController:
             }
         if not filename:
             filename = youtubeVideo.title + ".mp3"
+        if not folderpath:
+            folderpath = self.path
 
         if filename in musicFolder:
             return {
@@ -40,7 +42,39 @@ class YoutubeAudioController:
             "filepath": join(self.path, filename)
         }
     
-    def deleteYoutubeMusic(self, filename: str):
+    def downloadPlaylist(self, url: str, foldername: str = None, folderpath : str = None):
+        playlist = Playlist(url)
+        try: 
+            tempFoldername = playlist.title
+        except:
+            return {
+                "result" : 0,
+                "error" : "URL not recognized"
+            }
+        
+        if not foldername:
+            foldername = tempFoldername
+        if not folderpath:
+            folderpath = self.path
+        
+        if not exists(join(folderpath, foldername)):
+            mkdir(join(folderpath, foldername))
+
+        for video in playlist.videos:
+            print(f"Downloading {video.title}", end="")
+            try :
+                audio = video.streams.filter(only_audio = True).first()
+                audio.download(output_path=join(folderpath, foldername), filename=video.title.replace("/","-")+".mp3")
+                print("\tDONE")
+            except:
+                print("\tFAILED")
+        
+        return {
+            "result" : 1
+            }
+
+    
+    def deleteMusic(self, filename: str):
         musicFolder = [f for f in listdir(self.path) if isfile(join(self.path, f))]
         if filename in musicFolder:
             remove(join(self.path, filename))
