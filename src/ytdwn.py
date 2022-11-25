@@ -7,7 +7,7 @@ youtubeController = YoutubeAudioController("./Musics")
 arguments = argv
 
 if "help" in argv:
-    print("Help")
+    print("ytdwn <action> <url> --name='<name>' --path='<download path>'")
 
 elif "audio" in argv:
     filename = None
