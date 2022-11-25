@@ -16,6 +16,8 @@ elif "audio" in argv:
     for arg in argv:
         if "--name=" in arg:
             filename = arg.split("--name=")[-1]
+            if filename[-4:] == ".mp3":
+                filename += ".mp3"
         elif "--path=" in arg:
             filepath = arg.split("--path=")[-1]
         else:
@@ -39,7 +41,4 @@ elif "playlist" in argv:
     print(result)
 else :
     print("You can see all commands with ytdwn help")
-
-#youtubeController.purgeFolder()
-#youtubeController.downloadPlaylist("https://www.youtube.com/watch?v=OVMuwa-HRCQ&list=PLxC1NiFXlVF560gf-hI5J_vsnwgmWLV8K")
 
